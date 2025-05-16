@@ -6,40 +6,48 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static java.util.Collections.unmodifiableList;
+
 public class Parser {
     static List<Game> games = new ArrayList<>();
 
     public List<Game> sortByName(){
-        List<Game> sortedByName = new ArrayList<>(games);
-        // Sort games alphabetically (least)
-        //TODO
-        return  sortedByName;
+        return games.stream().sorted(Comparator.comparing(Game::getName)).toList();
     }
 
-    public List<Game> sortByRating(){
-        List<Game> sortedByRating = new ArrayList<>(games);
-        // Sort games by rating (most)
-        //TODO
-        return sortedByRating;
+    public List<Game> sortByRating() {
+        return games.stream()
+                .sorted(Comparator.comparing(Game::getRating).reversed())
+                .toList();
     }
 
-    public List<Game> sortByPrice(){
-        List<Game> sortedByPrice = new ArrayList<>(games);
-        // Sort games by price (most)
-        //TODO
-        return sortedByPrice;
+    public List<Game> sortByPrice() {
+        return games.stream()
+                .sorted(Comparator.comparing(Game::getPrice).reversed())
+                .toList();
+    }
+
+    public static List<Game> getGames() {
+        return unmodifiableList(games);
     }
 
     public void setUp() throws IOException {
+        File input = new File("src/Resources/Video_Games.html");
+        Document doc = Jsoup.parse(input, "UTF-8");
 
-        //Parse the HTML file using Jsoup
-        //TODO
+        Elements gameElements = doc.select("div.col-md-4.game");
 
-        // Extract data from the HTML
-        //TODO
+        for (Element gameElement : gameElements) {
+            String name = gameElement.selectFirst("h3.game-name").text();
 
-        // Iterate through each Game div to extract Game data
-        //TODO
+            String ratingText = gameElement.selectFirst("span.game-rating").text();
+            double rating = Double.parseDouble(ratingText.split("/")[0]);
+
+            String priceText = gameElement.selectFirst("span.game-price").text();
+            int price = Integer.parseInt(priceText.replace("€", "").trim());
+
+            games.add(new Game(name, rating, price));
+        }
     }
 
     public static void main(String[] args) {

@@ -6,8 +6,9 @@ public class Game {
     private int price;
 
     public Game(String name, double rating, int price) {
-        //TODO
-
+        setName(name);
+        setRating(rating);
+        setPrice(price);
     }
 
     public String getName() {
@@ -23,10 +24,19 @@ public class Game {
         return price;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        //TODO
-        return "";
+        return String.format("Game: %s\nRating: %f/5\nPrice: %d€" , name, rating, price);
     }
 
     @Override
